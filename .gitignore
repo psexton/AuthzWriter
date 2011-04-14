@@ -1,0 +1,5 @@
+# Ignore build dir and dist dir
+/build
+/dist
+# Ignore private properties
+/nbproject/private
