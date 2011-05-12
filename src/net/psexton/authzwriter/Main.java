@@ -5,11 +5,14 @@
 
 package net.psexton.authzwriter;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
@@ -32,21 +35,22 @@ public class Main {
     }
 
     public Main(String[] args) {
-        Option reader   = OptionBuilder.withArgName( "reader" )
+        Option reader   = OptionBuilder.withArgName("reader")
                                 .hasArgs()
-                                .withDescription("give this user read privledges" )
-                                .create( "reader" );
-        Option writer   = OptionBuilder.withArgName( "writer" )
+                                .withDescription("give this user read privledges")
+                                .create("reader");
+        Option writer   = OptionBuilder.withArgName("writer")
                                 .hasArgs()
-                                .withDescription("give this user read/write privledges" )
-                                .create( "writer" );
-        Option file   = OptionBuilder.withArgName( "file" )
+                                .withDescription("give this user read/write privledges")
+                                .create("writer");
+        Option file   = OptionBuilder.withArgName("file")
                                 .hasArgs()
-                                .withDescription("path to output file" )
-                                .create( "file" );
+                                .withDescription("path to output file")
+                                .create("file");
         Options options = new Options();
         options.addOption(reader);
         options.addOption(writer);
+        options.addOption(file);
         
         CommandLineParser parser = new PosixParser();
         try {
@@ -117,7 +121,16 @@ public class Main {
      * @param filePath 
      */
     private void writeToFile(String fileBody, String filePath) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        File file = new File(filePath);
+        try {
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            writer.print(fileBody);
+            writer.flush();
+            writer.close();
+        }
+        catch(IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     /**
